@@ -1,11 +1,15 @@
 from flask import Flask, jsonify
-from time import time
+import time
 
 app = Flask(__name__)
+request_count = 0
 
 @app.route('/time')
 def get_time():
-    return jsonify({"time": int(time())})
+    global request_count
+    request_count += 1
+    return jsonify({"time": int(time.time())})
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+@app.route('/metrics')
+def get_metrics():
+    return jsonify({"count": request_count})
